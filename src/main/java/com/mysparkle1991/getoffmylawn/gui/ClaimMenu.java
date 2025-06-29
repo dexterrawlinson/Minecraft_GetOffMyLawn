@@ -1,3 +1,4 @@
+// Fix 5: ClaimMenu.java - Fix getGameRules() access
 package com.mysparkle1991.getoffmylawn.gui;
 
 import com.mysparkle1991.getoffmylawn.init.ClaimModMenuTypes;
@@ -70,6 +71,9 @@ public class ClaimMenu extends AbstractContainerMenu {
 
     // Get max claim count from game rules
     public int getMaxClaimCount() {
-        return level.getGameRules().getInt(com.mysparkle1991.getoffmylawn.init.ClaimModGameRules.MAX_CLAIM_COUNT);
+        if (level.isClientSide) {
+            return 5; // Default fallback for client
+        }
+        return level.getServer().getGameRules().getInt(com.mysparkle1991.getoffmylawn.init.ClaimModGameRules.MAX_CLAIM_COUNT);
     }
 }

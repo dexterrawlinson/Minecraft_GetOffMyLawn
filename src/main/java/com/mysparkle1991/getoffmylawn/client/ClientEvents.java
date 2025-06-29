@@ -1,3 +1,4 @@
+// Fix 9: ClientEvents.java - Remove deprecated bus parameter
 package com.mysparkle1991.getoffmylawn.client;
 
 import com.mysparkle1991.getoffmylawn.GetOffMyLawn;
@@ -9,7 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
-@EventBusSubscriber(modid = GetOffMyLawn.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = GetOffMyLawn.MODID, value = Dist.CLIENT)
 public class ClientEvents {
 
     @SubscribeEvent

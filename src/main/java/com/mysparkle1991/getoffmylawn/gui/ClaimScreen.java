@@ -109,6 +109,7 @@ public class ClaimScreen extends AbstractContainerScreen<ClaimMenu> {
         }
     }
 
+    // Fix 6: ClaimScreen.java - Replace updateClaimInfo() method with proper Optional handling
     private void updateClaimInfo() {
         BlockPos playerPos = this.menu.getPlayer().blockPosition();
         this.isCurrentChunkClaimed = CheckIfChunkXYZIsClaimedProcedure.execute(
@@ -127,11 +128,11 @@ public class ClaimScreen extends AbstractContainerScreen<ClaimMenu> {
                 var blockEntity = this.menu.getLevel().getBlockEntity(claimPos);
                 if (blockEntity != null) {
                     var data = blockEntity.getPersistentData();
-                    this.currentClaimName = data.contains("claimname") ? data.getString("claimname") : "";
-                    this.currentOwner = data.contains("ownerdisplay") ? data.getString("ownerdisplay") : "";
-                    this.currentCategory = data.contains("category") ? data.getString("category") : "";
-                    this.isPublic = data.contains("Cpublic") && data.getBoolean("Cpublic");
-                    String ownerUUID = data.contains("owneruuid") ? data.getString("owneruuid") : "";
+                    this.currentClaimName = data.contains("claimname") ? data.getString("claimname").orElse("") : "";
+                    this.currentOwner = data.contains("ownerdisplay") ? data.getString("ownerdisplay").orElse("") : "";
+                    this.currentCategory = data.contains("category") ? data.getString("category").orElse("") : "";
+                    this.isPublic = data.contains("Cpublic") && data.getBoolean("Cpublic").orElse(false);
+                    String ownerUUID = data.contains("owneruuid") ? data.getString("owneruuid").orElse("") : "";
                     this.isOwner = ownerUUID.equals(this.menu.getPlayer().getStringUUID());
                 }
             }

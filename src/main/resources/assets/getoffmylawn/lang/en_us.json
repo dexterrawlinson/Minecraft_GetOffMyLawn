@@ -2,9 +2,18 @@
   "itemGroup.getoffmylawn.claim": "Get Off My Lawn",
   "block.getoffmylawn.bedrock_claim": "Claim Block",
   "item.getoffmylawn.bedrock_claim": "Claim Block",
+  "item.getoffmylawn.claim_gui": "Claim Manager",
 
   "gamerule.maxClaimCount": "Max Claim Count",
   "gamerule.maxClaimCount.description": "Maximum number of chunks a player can claim",
   "gamerule.claimPermission": "Claim Permission",
-  "gamerule.claimPermission.description": "Whether claiming is enabled for all players or restricted to OPs"
+  "gamerule.claimPermission.description": "Whether claiming is enabled for all players or restricted to OPs",
+
+  "gui.getoffmylawn.claim_management": "Claim Management",
+  "gui.getoffmylawn.claim_name": "Claim Name:",
+  "gui.getoffmylawn.category": "Category:",
+  "gui.getoffmylawn.owner": "Owner:",
+  "gui.getoffmylawn.status.claimed": "Chunk Claimed",
+  "gui.getoffmylawn.status.unclaimed": "Chunk Unclaimed",
+  "gui.getoffmylawn.claims_count": "Claims: %d/%d"
 }

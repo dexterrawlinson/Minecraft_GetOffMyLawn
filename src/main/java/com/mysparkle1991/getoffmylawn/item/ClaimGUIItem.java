@@ -1,3 +1,4 @@
+// Fix 1: ClaimGUIItem.java - Use correct InteractionResultHolder
 package com.mysparkle1991.getoffmylawn.item;
 
 import com.mysparkle1991.getoffmylawn.gui.ClaimMenu;
@@ -25,11 +26,12 @@ public class ClaimGUIItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             BlockPos playerPos = player.blockPosition();
             serverPlayer.openMenu(new ClaimMenuProvider(playerPos));
         }
-        return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     // Simple menu provider implementation

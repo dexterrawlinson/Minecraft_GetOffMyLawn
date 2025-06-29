@@ -1,3 +1,4 @@
+// Fix 7: ClaimChunkProcedure.java - Fix imports and getGameRules()
 package com.mysparkle1991.getoffmylawn.procedures;
 
 import com.mysparkle1991.getoffmylawn.init.ClaimModGameRules;
@@ -7,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
 
@@ -17,9 +19,18 @@ public class ClaimChunkProcedure {
 
         LevelChunk chunkToClaim = (LevelChunk) world.getChunk(new BlockPos((int) x, (int) y, (int) z));
 
-        if (world.getLevelData().getGameRules().getBoolean(ClaimModGameRules.CLAIM_PERMISSION)) {
+        // Get game rules from server if available
+        boolean claimPermission = true;
+        int maxClaimCount = 5;
+
+        if (world instanceof Level level && !level.isClientSide && level.getServer() != null) {
+            claimPermission = level.getServer().getGameRules().getBoolean(ClaimModGameRules.CLAIM_PERMISSION);
+            maxClaimCount = level.getServer().getGameRules().getInt(ClaimModGameRules.MAX_CLAIM_COUNT);
+        }
+
+        if (claimPermission) {
             if (!CheckIfChunkXYZIsClaimedProcedure.execute(world, x, y, z)) {
-                if (entity.getData(ClaimModVariables.PLAYER_VARIABLES).playerClaimCount < world.getLevelData().getGameRules().getInt(ClaimModGameRules.MAX_CLAIM_COUNT)) {
+                if (entity.getData(ClaimModVariables.PLAYER_VARIABLES).playerClaimCount < maxClaimCount) {
                     ClaimChunkXYZForEntityProcedure.execute(world, x, y, z, entity);
                 } else if (entity instanceof Player player) {
                     if (!player.level().isClientSide()) {
@@ -31,19 +42,15 @@ public class ClaimChunkProcedure {
                     player.displayClientMessage(Component.literal("§4This chunk is already claimed."), false);
                 }
             }
-        } else if (entity.hasPermissions(4)) {
+        } else if (entity instanceof Player player && player.hasPermissions(4)) {
             if (!CheckIfChunkXYZIsClaimedProcedure.execute(world, x, y, z)) {
-                if (entity.getData(ClaimModVariables.PLAYER_VARIABLES).playerClaimCount < world.getLevelData().getGameRules().getInt(ClaimModGameRules.MAX_CLAIM_COUNT)) {
+                if (entity.getData(ClaimModVariables.PLAYER_VARIABLES).playerClaimCount < maxClaimCount) {
                     ClaimChunkXYZForEntityProcedure.execute(world, x, y, z, entity);
-                } else if (entity instanceof Player player) {
-                    if (!player.level().isClientSide()) {
-                        player.displayClientMessage(Component.literal("§cYou have reached the maximum number of claimable chunks."), false);
-                    }
+                } else if (!player.level().isClientSide()) {
+                    player.displayClientMessage(Component.literal("§cYou have reached the maximum number of claimable chunks."), false);
                 }
-            } else if (entity instanceof Player player) {
-                if (!player.level().isClientSide()) {
-                    player.displayClientMessage(Component.literal("§4This chunk is already claimed."), false);
-                }
+            } else if (!player.level().isClientSide()) {
+                player.displayClientMessage(Component.literal("§4This chunk is already claimed."), false);
             }
         } else if (entity instanceof Player player) {
             if (!player.level().isClientSide()) {

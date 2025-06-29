@@ -1,3 +1,4 @@
+// Fix 2: BedrockClaimBlock.java - Fix method signatures
 package com.mysparkle1991.getoffmylawn.block;
 
 import com.mysparkle1991.getoffmylawn.block.entity.BedrockClaimBlockEntity;
@@ -49,19 +50,17 @@ public class BedrockClaimBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public MenuProvider getMenuProvider(BlockState state, Level worldIn, BlockPos pos) {
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        return tileEntity instanceof MenuProvider menuProvider ? menuProvider : null;
-    }
-
-    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BedrockClaimBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, ClaimModBlockEntities.BEDROCK_CLAIM.get(), BedrockClaimBlockEntity::serverTick);
+        if (level.isClientSide) {
+            return null;
+        }
+        return type == ClaimModBlockEntities.BEDROCK_CLAIM.get() ?
+                (level1, pos, state1, blockEntity) -> BedrockClaimBlockEntity.serverTick(level1, pos, state1, (BedrockClaimBlockEntity) blockEntity) : null;
     }
 
     @Override
@@ -90,3 +89,4 @@ public class BedrockClaimBlock extends Block implements EntityBlock {
         }
     }
 }
+

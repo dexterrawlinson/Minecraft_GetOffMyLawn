@@ -1,3 +1,4 @@
+// Fix 8: ClaimInfoProcedure.java - Fix Optional<String> handling
 package com.mysparkle1991.getoffmylawn.procedures;
 
 import net.minecraft.core.BlockPos;
@@ -27,10 +28,10 @@ public class ClaimInfoProcedure {
             if (blockEntity != null && entity instanceof Player player) {
                 if (!player.level().isClientSide()) {
                     var data = blockEntity.getPersistentData();
-                    String claimName = data.getString("claimname");
-                    String ownerDisplay = data.getString("ownerdisplay");
-                    String category = data.getString("category");
-                    String claimDate = data.getString("Cdate");
+                    String claimName = data.contains("claimname") ? data.getString("claimname").orElse("Unknown") : "Unknown";
+                    String ownerDisplay = data.contains("ownerdisplay") ? data.getString("ownerdisplay").orElse("Unknown") : "Unknown";
+                    String category = data.contains("category") ? data.getString("category").orElse("None") : "None";
+                    String claimDate = data.contains("Cdate") ? data.getString("Cdate").orElse("Unknown") : "Unknown";
 
                     player.displayClientMessage(Component.literal("§aChunk Name: §e" + claimName), false);
                     player.displayClientMessage(Component.literal("§aOwner: §e" + ownerDisplay), false);

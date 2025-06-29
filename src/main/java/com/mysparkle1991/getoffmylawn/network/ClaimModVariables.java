@@ -1,17 +1,14 @@
+// Fix 4: ClaimModVariables.java - Simplified attachment system without serializer
 package com.mysparkle1991.getoffmylawn.network;
 
 import com.mysparkle1991.getoffmylawn.GetOffMyLawn;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -22,7 +19,7 @@ public class ClaimModVariables {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, GetOffMyLawn.MODID);
 
     public static final Supplier<AttachmentType<PlayerVariables>> PLAYER_VARIABLES = ATTACHMENT_TYPES.register("player_variables",
-            () -> AttachmentType.serializable(PlayerVariables::new).build());
+            () -> AttachmentType.builder(PlayerVariables::new).build());
 
     public static class PlayerVariables {
         public double playerClaimCount = 0.0;
@@ -31,22 +28,6 @@ public class ClaimModVariables {
         public double lastZ = 0.0;
 
         public PlayerVariables() {}
-
-        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-            CompoundTag tag = new CompoundTag();
-            tag.putDouble("playerClaimCount", playerClaimCount);
-            tag.putString("lastClaimName", lastClaimName);
-            tag.putDouble("lastX", lastX);
-            tag.putDouble("lastZ", lastZ);
-            return tag;
-        }
-
-        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-            playerClaimCount = tag.getDouble("playerClaimCount");
-            lastClaimName = tag.getString("lastClaimName");
-            lastX = tag.getDouble("lastX");
-            lastZ = tag.getDouble("lastZ");
-        }
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer serverPlayer) {
