@@ -1,0 +1,10 @@
+{
+  "itemGroup.getoffmylawn.claim": "Get Off My Lawn",
+  "block.getoffmylawn.bedrock_claim": "Claim Block",
+  "item.getoffmylawn.bedrock_claim": "Claim Block",
+
+  "gamerule.maxClaimCount": "Max Claim Count",
+  "gamerule.maxClaimCount.description": "Maximum number of chunks a player can claim",
+  "gamerule.claimPermission": "Claim Permission",
+  "gamerule.claimPermission.description": "Whether claiming is enabled for all players or restricted to OPs"
+}
